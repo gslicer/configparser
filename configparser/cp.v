@@ -8,24 +8,21 @@ const (
 	cs_marker = `#` // comment start marker
 	sn_start = `[` // section name start marker
 	sn_end = `]` // section name end marker
-
-	debug = false // temporarily used until V has a debug mode again
 )
 
 // init initializes the module
 fn init() {
-	// use 'v -debug *.v' to enable debug mode
-	$if debug { eprintln("CP: proper debug mode detected-...") }
+	// use 'v -d debug *.v' to enable debug mode
+	$if debug { eprintln("CP: debug mode detected!") }
 }
 
 // read_file processes the input file
-fn read_file(cfg_file_name string) ?[]string {
-	if debug == true { println("CP: opening file $cfg_file_name ...") }
-	// reads actually the file if found
+fn read_file(cfg_file_name string) ?[]string { // reads actually the file if found
+	$if debug { println("CP: opening file $cfg_file_name ...") }
 	f := os.read_lines(cfg_file_name) or { 
 		return error("CP: Failed to open configuration file.")
 	}
-	if debug == true { println("CP: file found and opened sucessfully.") }
+	$if debug { println("CP: file found and opened sucessfully.") }
 	return f // returns the string array representing the text file
 }
 
@@ -39,7 +36,7 @@ pub fn read_config_section(cfg_file_name string, section string, mut m map[strin
 		if trimmed_line.len == 0 || trimmed_line[0] == cs_marker { continue } // skip empty or comment lines, continue with next line
 		if tokenize_line(mut tokenized_line, trimmed_line, in_section) == true { // is section begin
 			if tokenized_line[0] == sn_start.str() + section + sn_end.str() { // check if section name matches
-				if debug == true { println('CP: Section $tokenized_line found.') }
+				$if debug { println('CP: Section $tokenized_line found.') }
 				in_section = true
 			} else { // is another section
 				in_section = false
@@ -49,7 +46,7 @@ pub fn read_config_section(cfg_file_name string, section string, mut m map[strin
 		// if key matches then set the corresponding values
 		if tokenized_line[0] in m { m[tokenized_line[0]] = tokenized_line[1..] }
  	} 
-	if debug == true { println('CP: Key/Values found: $m') }
+	$if debug { println('CP: Key/Values found: $m') }
 }
 
 // tokenize_line goes through each line which may contain relevant data and extracts section names, keys and matching values
