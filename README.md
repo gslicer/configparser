@@ -4,12 +4,13 @@ Module for reading plain text INI-like configuration files written in V
 
 CONVENTIONS (for the configuration file format)
 - config file name is case sensitive
-- file can be delimited by any combination of LF and CR (for cross OS compatibility)
+- lines can be delimited by any combination of LF and CR (for cross OS compatibility)
 - file character encoding is UTF-8 or compatible (like ASCII)
 - lines starting with # are treated entirely as comments, anything following a # is treated as a comment
 - file must contain at least one or multiple sections
 - section names are surrounded by []
-- keys must be unique and are on the left side of the separator = on the right side are the values
+- keys and are on the left side of the separator = (they must be unique not to be overwritten)
+- values are on the right side of the seperator =
 - section names, keys as well as values are case sensitive and can contain white spaces, outer whitespaces however will be trimmed
 - multiple values of the same type belonging to the same key can be separeted by a comma
 - section names are always the first value

@@ -62,6 +62,7 @@ fn tokenize_line(trimmed_line string, section_title string) (bool, string, []str
 			if character == cs_marker {
 				val_end = i-1
 				line << trimmed_line[val_begin..val_end].trim_space()
+				println(line)
 				break
 			}
 			if character == kv_separator {
@@ -69,17 +70,15 @@ fn tokenize_line(trimmed_line string, section_title string) (bool, string, []str
 				line[0] = trimmed_line[val_begin..val_end].trim_space() // set key
 				val_begin = i+1
 				line << section_title // add section title as first value
+				println(line)
 				continue
 			}
 			if character == mv_separator {
 				val_end = i
 				line << trimmed_line[val_begin..val_end].trim_space() // add seperated value
+				println(line)
 				val_begin = i+1
 				continue
-			}
-			if i == trimmed_line.len-1 {
-				 val_end = i+1
-				 line << trimmed_line[val_begin..val_end].trim_space() // add value or last seperated value
 			}
 		}	
 	}
