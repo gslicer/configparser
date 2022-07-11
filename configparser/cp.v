@@ -59,26 +59,23 @@ fn tokenize_line(trimmed_line string, section_title string) (bool, string, []str
 	else { // section entered
 		mut val_begin, mut val_end := 0, 0 // initialize bounderies for pulling out the substrings
 		for i, character in trimmed_line {
-			if character == cs_marker {
-				val_end = i-1
-				line << trimmed_line[val_begin..val_end].trim_space()
-				println(line)
+			val_end = i
+			if character == cs_marker { // inline comment detected
 				break
 			}
 			if character == kv_separator {
-				val_end = i
 				line[0] = trimmed_line[val_begin..val_end].trim_space() // set key
 				val_begin = i+1
 				line << section_title // add section title as first value
-				println(line)
 				continue
 			}
 			if character == mv_separator {
-				val_end = i
 				line << trimmed_line[val_begin..val_end].trim_space() // add seperated value
-				println(line)
 				val_begin = i+1
 				continue
+			}
+			if trimmed_line.len-1 == i {
+				line << trimmed_line[val_begin..val_end].trim_space() // add last value
 			}
 		}	
 	}
