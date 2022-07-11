@@ -1,19 +1,20 @@
 # configparser
 
-V module for reading plain text INI-like configuration files
+Module for reading plain text INI-like configuration files written in V
 
-CONVENTIONS (for the file format)
+CONVENTIONS (for the configuration file format)
 - config file name is case sensitive
 - file can be delimited by any combination of LF and CR (for cross OS compatibility)
-- file character encoding is ASCII or UTF-8
+- file character encoding is UTF-8 or compatible (like ASCII)
 - lines starting with # are treated entirely as comments, anything following a # is treated as a comment
-- file can contain one or multiple sections
-- section names are surrounded by [], white spaces are allowed but not encouraged
-- keys are on the left side of the separator = on the right side are the values
-- keys as well as values are case sensitive and can contain white spaces, outer whitespaces however will be trimmed
-- multiple values of the same type belonging to the same key can be separeted by a ,
+- file must contain at least one or multiple sections
+- section names are surrounded by []
+- keys must be unique and are on the left side of the separator = on the right side are the values
+- section names, keys as well as values are case sensitive and can contain white spaces, outer whitespaces however will be trimmed
+- multiple values of the same type belonging to the same key can be separeted by a comma
+- section names are always the first value
 
-USAGE (from V)
-- create a string map of string-arrayw: map[string][]string{} for each section having the keys set (and empty or default) values
-- call the public function having all arguments provided: config file name, section name, the map
-- the result is the same map having all values populated, which were found in the coniguration file 
+USAGE
+- call the public function having all arguments provided: config file name
+- the result is string array map having all values populated which were found in the coniguration file 
+- see example .ini file and example test file
