@@ -6,9 +6,8 @@ fn main() {
 	
 	configuration := cp.read_config('test_cp_cfg.ini')
 
-	println("Map content: ")
-	print(configuration)
-
-	println("\n\nConfiguration query for 'illegal key': ")
-	println(configuration['illegal key'])
+	config_item := "supported.screen.resolutions"
+	println("\nConfiguration query for '$config_item': ")
+	println(configuration[config_item])
+	println("\n")
 }
