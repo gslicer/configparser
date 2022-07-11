@@ -38,11 +38,11 @@ pub fn read_config(cfg_file_name string) map[string][]string {
 		trimmed_line := line.trim_space() // remove leading and trailing whitespaces
 		if trimmed_line.len == 0 || trimmed_line[0] == cs_marker { continue } // skip empty or comment lines, continue with next line
 		sec_begin, section_title, tokenized_line = tokenize_line(trimmed_line, section_title)
+		$if debug { println("DEBUG section number and name : $section_number - $section_title") }
 		if  sec_begin == true { // new section begins
 			section_number++
 			continue
 		}
-		$if debug { println("DEBUG section number and name : $section_number - $section_title") }
 		if tokenized_line[0] != "" { content[tokenized_line[0]] = tokenized_line[1..] } // seve the extracted values
 		continue // go to next line
 	}
@@ -57,25 +57,30 @@ fn tokenize_line(trimmed_line string, section_title string) (bool, string, []str
 		return true, trimmed_line[1..trimmed_line.len-1].trim_space(), line // extract the section name
 	} 
 	else { // section entered
-		mut val_begin, mut val_end := 0, 0 // initialize bounderies for pulling out the substrings
+		mut val_begin := 0 // initialize start of a new substring
 		for i, character in trimmed_line {
-			val_end = i
 			if character == cs_marker { // inline comment detected
+				line << trimmed_line[val_begin..i].trim_space() // add last value before comment
+				$if debug { print("DEBUG value before comment: ") println(trimmed_line[val_begin..i].trim_space()) }
 				break
 			}
-			if character == kv_separator {
-				line[0] = trimmed_line[val_begin..val_end].trim_space() // set key
-				val_begin = i+1
+			if character == kv_separator { // key/values seperator detected
+				line[0] = trimmed_line[val_begin..i].trim_space() // set key
+				$if debug { print("DEBUG key: ") println(trimmed_line[val_begin..i].trim_space()) }
 				line << section_title // add section title as first value
-				continue
-			}
-			if character == mv_separator {
-				line << trimmed_line[val_begin..val_end].trim_space() // add seperated value
 				val_begin = i+1
 				continue
 			}
-			if trimmed_line.len-1 == i {
-				line << trimmed_line[val_begin..val_end].trim_space() // add last value
+			if character == mv_separator { // multi-values seperator detected
+				line << trimmed_line[val_begin..i].trim_space() // add seperated value
+				$if debug { print("DEBUG midvalue: ") println(trimmed_line[val_begin..i].trim_space()) }
+				val_begin = i+1
+				continue
+			}
+			if trimmed_line.len-1 == i { // end of line detected
+				line << trimmed_line[val_begin..i+1].trim_space() // add last value
+				$if debug { print("DEBUG last value: ") println(trimmed_line[val_begin..i+1].trim_space()) }
+				break
 			}
 		}	
 	}
