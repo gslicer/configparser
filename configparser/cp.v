@@ -17,11 +17,9 @@ fn init() {
 }
 
 // read_file processes the input file
-fn read_file(cfg_file_name string) ?[]string { // reads actually the file if found
+fn read_file(cfg_file_name string) ![]string { // reads actually the file if found
 	$if debug { println("DEBUG try opening file '$cfg_file_name'") }
-	f := os.read_lines(cfg_file_name) or { 
-		return error("DEBUG failed to open file")
-	}
+	f := os.read_lines(cfg_file_name) or { return error("DEBUG failed to open file") }
 	$if debug { println("DEBUG file found and opened sucessfully") }
 	return f // returns the string array representing the text file
 }
